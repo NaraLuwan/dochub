@@ -1,0 +1,64 @@
+<settings xmlns="http://maven.apache.org/POM/4.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                                http://maven.apache.org/xsd/settings-1.0.0.xsd">
+	<!-- 本地仓库 -->
+    <localRepository>D:\MavenHouse\repository</localRepository>
+
+	<!---- 远程仓库列表 ---->
+	<repositories>
+		<!-- 私服 -->
+		<repository>
+			<id>private</id>
+			<url>http://github.luwan.com/artifactory/repo</url>
+        </repository>
+
+		<!---- 其他开源 ---->
+		<!-- 阿里云 -->
+		<repository>  
+            <id>alimaven</id>  
+            <name>aliyun maven</name>  
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>  
+            <releases>  
+                <enabled>true</enabled>  
+            </releases>  
+            <snapshots>  
+                <enabled>false</enabled>  
+            </snapshots>  
+        </repository>  
+		
+		<!-- confluent -->
+        <repository>
+            <id>confluent</id>
+            <url>https://packages.confluent.io/maven/</url>
+			<releases>  
+                <enabled>true</enabled>  
+            </releases>  
+            <snapshots>  
+                <enabled>false</enabled>  
+            </snapshots>  
+        </repository>
+    </repositories>
+	
+	<!-- 镜像 -->
+    <mirrors>
+        <mirror>
+			<!-- 覆盖中央仓库（默认的远程仓库）-->
+            <id>defaultCentral</id>
+			<url>http://github.luwan.com/artifactory/repo</url>
+			<!-- 中央仓库镜像 -->
+            <mirrorOf>private,central</mirrorOf>
+			<!-- 代理所有远程仓库则配置为* -->
+			<!-- <mirrorOf>*</mirrorOf> -->
+        </mirror>
+    </mirrors>
+	
+	<!-- 配置远程仓库认证信息（一般私服才需要） -->
+    <servers>
+        <server>
+            <id>private</id>
+            <username>admin</username>
+            <password>password</password>
+        </server>
+    </servers>
+</settings>
