@@ -137,9 +137,12 @@ unix:///var/run/supervisor.sock no such file
 error: <class 'socket.error'>, [Errno 2] No such file or directory: file: /usr/lib64/python2.7/socket.py line: 224
 ```
 问题原因：没有开启服务
+
 解决办法：supervisord -c /etc/supervisord.conf
 
 2. 启动了多个supervisord服务，导致无法正常关闭服务
+
 问题原因：在运行supervisord -c /etc/supervisord.conf之前，直接运行过supervisord -c /etc/supervisord.d/xx.conf导致有些进程被多个superviord管理，无法正常关闭进程。
+
 解决办法：使用ps -fe | grep supervisord查看所有启动过的supervisord服务，kill相关的进程。
 

@@ -1,5 +1,3 @@
-[TOC]
-
 ## 1. 前言
 
 在使用spring security开发的过程中，获取当前登录用户时常常会用到这样的写法：
@@ -10,7 +8,7 @@ UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAu
 
 在多线程环境下，也总是能拿到想要的结果。好奇spring security是如何做到的，通过源码分析下
 
-[^注]: **基于spring security4.2.3版本**
+注：**基于spring security4.2.3版本**
 
 ## 2. 过滤器链
 
