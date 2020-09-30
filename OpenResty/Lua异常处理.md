@@ -52,8 +52,8 @@ end
   
 local function main(arg1, arg2)  
     -- ...
-    print(arg1)  
+    print(arg1..arg2)  
 end  
-  
-xpcall(main, traceback) 
+
+xpcall(main, traceback, arg1, arg2) 
 ```
