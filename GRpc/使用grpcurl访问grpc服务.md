@@ -14,70 +14,9 @@ grpc-hello
     ├── helloworld.pb.go
     └── helloworld.proto
 ```
-helloworld.proto:
-```protobuf
-syntax = "proto3";
+proto定义详见：[helloworld.proto:]()
 
-package proto;
-
-// The greeting service definition.
-service Greeter {
-    // Sends a greeting
-    rpc SayHello (HelloRequest) returns (HelloReply) {}
-}
-
-// The request message containing the user's name.
-message HelloRequest {
-    string name = 1;
-}
-
-// The response message containing the greetings
-message HelloReply {
-    string message = 1;
-}
-```
-
-main.go:
-```go
-package main
-
-import "fmt"
-import "log"
-import "net"
-import "context"
-import "grpc-hello/proto"
-import "google.golang.org/grpc"
-import "google.golang.org/grpc/reflection"
-
-func main() {
-	lis, err := net.Listen("tcp", ":8080")
-	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
-	}
-
-	server := grpc.NewServer()
-	// 注册grpcurl所需的reflection服务
-	reflection.Register(server)
-	// 注册业务服务
-	proto.RegisterGreeterServer(server, &greeter{})
-	
-	if err := server.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
-	}
-}
-
-type greeter struct {
-
-}
-
-func (*greeter) SayHello(ctx context.Context, req *proto.HelloRequest) (*proto.HelloReply, error) {
-	fmt.Println(req)
-	reply := &proto.HelloReply{Message: "hello"}
-	return reply, nil
-}
-```
-
-在main.go的第19行，使用reflection.Register(server)注册了reflection服务。
+注册grpc服务详见：[main.go]()，在main.go的第19行，使用reflection.Register(server)注册了reflection服务
 
 ## grpcurl的安装和使用
 在Mac OS下安装grpcurl:
