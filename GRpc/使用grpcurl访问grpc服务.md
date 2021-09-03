@@ -14,9 +14,9 @@ grpc-hello
     ├── helloworld.pb.go
     └── helloworld.proto
 ```
-proto定义详见：[helloworld.proto:]()
+proto定义详见：[helloworld.proto:](https://github.com/NaraLuwan/dochub/blob/master/GRpc/helloworld.proto)
 
-注册grpc服务详见：[main.go]()，在main.go的第19行，使用reflection.Register(server)注册了reflection服务
+注册grpc服务详见：[main.go](https://github.com/NaraLuwan/dochub/blob/master/GRpc/main.go)，在main.go的第19行，使用reflection.Register(server)注册了reflection服务
 
 ## grpcurl的安装和使用
 在Mac OS下安装grpcurl:
