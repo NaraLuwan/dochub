@@ -1,0 +1,132 @@
+grpcurl是一个命令行工具，使用它可以在命令行中访问gRPC服务，就像使用curl访问http服务一样
+
+## 准备
+在gRPC服务中注册reflection服务，gRPC服务是使用Protobuf(PB)协议的，而PB提供了在运行时获取Proto定义信息的反射功能。grpc-go中的"google.golang.org/grpc/reflection"包就对这个反射功能提供了支持。
+
+这里以grpc-go官方的helloword为例，代码结构如下:
+```text
+grpc-hello
+├── go.mod
+├── go.sum
+├── main.go
+└── proto
+    ├── doc.go
+    ├── helloworld.pb.go
+    └── helloworld.proto
+```
+helloworld.proto:
+```protobuf
+syntax = "proto3";
+
+package proto;
+
+// The greeting service definition.
+service Greeter {
+    // Sends a greeting
+    rpc SayHello (HelloRequest) returns (HelloReply) {}
+}
+
+// The request message containing the user's name.
+message HelloRequest {
+    string name = 1;
+}
+
+// The response message containing the greetings
+message HelloReply {
+    string message = 1;
+}
+```
+
+main.go:
+```go
+package main
+
+import "fmt"
+import "log"
+import "net"
+import "context"
+import "grpc-hello/proto"
+import "google.golang.org/grpc"
+import "google.golang.org/grpc/reflection"
+
+func main() {
+	lis, err := net.Listen("tcp", ":8080")
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+
+	server := grpc.NewServer()
+	// 注册grpcurl所需的reflection服务
+	reflection.Register(server)
+	// 注册业务服务
+	proto.RegisterGreeterServer(server, &greeter{})
+	
+	if err := server.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
+}
+
+type greeter struct {
+
+}
+
+func (*greeter) SayHello(ctx context.Context, req *proto.HelloRequest) (*proto.HelloReply, error) {
+	fmt.Println(req)
+	reply := &proto.HelloReply{Message: "hello"}
+	return reply, nil
+}
+```
+
+在main.go的第19行，使用reflection.Register(server)注册了reflection服务。
+
+## grpcurl的安装和使用
+在Mac OS下安装grpcurl:
+```shell script
+brew install grpcurl
+```
+grpcurl使用如下示例如下:
+
+查看服务列表:
+```shell script
+grpcurl -plaintext 127.0.0.1:8080 list
+```
+```text
+grpc.reflection.v1alpha.ServerReflection
+proto.Greeter
+```
+
+查看某个服务的方法列表:
+```shell script
+grpcurl -plaintext 127.0.0.1:8080 list proto.Greeter
+```
+```text
+proto.Greeter.SayHello
+```
+
+查看方法定义:
+```shell script
+grpcurl -plaintext 127.0.0.1:8080 describe proto.Greeter.SayHello
+```
+```text
+proto.Greeter.SayHello is a method:
+rpc SayHello ( .proto.HelloRequest ) returns ( .proto.HelloReply );
+```
+
+查看请求参数:
+```shell script
+grpcurl -plaintext 127.0.0.1:8080 describe proto.HelloRequest
+```
+```text
+proto.HelloRequest is a message:
+message HelloRequest {
+  string name = 1;
+}
+```
+
+调用服务，参数传json即可:
+```shell script
+grpcurl -d '{"name": "abc"}' -plaintext 127.0.0.1:8080  proto.Greeter.SayHello
+```
+{
+  "message": "hello"
+}
