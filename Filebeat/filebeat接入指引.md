@@ -1,4 +1,4 @@
-工作原理
+## 工作原理
 Filebeat 是使用 Golang 实现的轻量型日志采集器，也是 Elasticsearch stack 里面的一员。本质上是一个 agent ，可以安装在各个节点上，根据配置读取对应位置的日志，并上报到相应的地方去。其工作流程如下图所示：
 
 ![](https://github.com/NaraLuwan/dochub/tree/master/images/2021110301.png)
